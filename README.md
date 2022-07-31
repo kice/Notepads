@@ -22,6 +22,24 @@
   </a>
 </p>
 
+## What changed?
+
++ remove appcenter tracking
++ allow reizing for find&replace window
++ add padding for editor line numbers
++ add alternative font settings
++ add pure dark theme
++ add additional encoding check for shift-jis
++ allow quick theme&font change at status bar
++ use [codicon(vscode icon)](https://github.com/microsoft/vscode-codicons) for find&replace icons
+
+### plan to do
+
++ [ ] add syntax highlighting
++ [ ] change scrollbar into minimap
++ [ ] allow run script for text processing (and it won't be lua)
++ [ ] replace more icons with codicon
+
 ## What is Notepads and why do I care?
 
 I have been waiting long enough for a modern Windows 10 notepad app to come before I decided to create one myself. Don’t get me wrong, Notepad++, VS Code, and Sublime are great text editors. I have used them all and I will continue to use them in the future. However, they are either too heavy or look less appealing. There are times that I just wanted to use Windows notepad for things like writing notes or editing config files. So I decided to create a win32 notepad replacement here and try to give it a modern look and feel. Most importantly, it has to be blazingly fast and appeals to everyone.
