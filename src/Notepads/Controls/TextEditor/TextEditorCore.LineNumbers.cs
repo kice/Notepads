@@ -106,8 +106,9 @@
 
             Dictionary<int, Rect> lineNumberTextRenderingPositions = CalculateLineNumberTextRenderingPositions(document, startRange, endRange);
 
+            var textLength = Math.Max(4, (document.Length - 1).ToString().Length);
             var minLineNumberTextRenderingWidth = CalculateMinimumRequisiteIntegerTextRenderingWidth(FontFamily,
-                FontSize, (document.Length - 1).ToString().Length);
+                FontSize, textLength);
 
             RenderLineNumbersInternal(lineNumberTextRenderingPositions, minLineNumberTextRenderingWidth);
         }

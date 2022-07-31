@@ -693,4 +693,22 @@
     <value>目前尚未支援「{0}」副檔名</value>
     <comment>FileRenameError: Extension is not currently supported. {0} stands for the file extension string.</comment>
   </data>
+  <data name="App_FontIndicator_Description" xml:space="preserve">
+    <value>切換編輯器字型</value>
+  </data>
+  <data name="App_AltFont_Name" xml:space="preserve">
+    <value>備用</value>
+  </data>
+  <data name="App_ThemeModeSettings_Light" xml:space="preserve">
+    <value>淺色</value>
+  </data>
+  <data name="App_ThemeModeSettings_Dark" xml:space="preserve">
+    <value>深色</value>
+  </data>
+  <data name="App_ThemeModeSettings_PureDark" xml:space="preserve">
+    <value>純黑</value>
+  </data>
+  <data name="App_ThemeModeSettings_System" xml:space="preserve">
+    <value>系統主題</value>
+  </data>
 </root>

@@ -9,10 +9,21 @@
 
     public static class AppSettingsService
     {
+        public static event EventHandler<bool> OnUseAltFontChanged;
         public static event EventHandler<string> OnFontFamilyChanged;
         public static event EventHandler<FontStyle> OnFontStyleChanged;
         public static event EventHandler<FontWeight> OnFontWeightChanged;
         public static event EventHandler<int> OnFontSizeChanged;
+
+        //public static event EventHandler<string> OnDefaultFontFamilyChanged;
+        //public static event EventHandler<FontStyle> OnDefaultFontStyleChanged;
+        //public static event EventHandler<FontWeight> OnDefaultFontWeightChanged;
+        //public static event EventHandler<int> OnDefaultFontSizeChanged;
+        //public static event EventHandler<string> OnAltFontFamilyChanged;
+        //public static event EventHandler<FontStyle> OnAltFontStyleChanged;
+        //public static event EventHandler<FontWeight> OnAltFontWeightChanged;
+        //public static event EventHandler<int> OnAltFontSizeChanged;
+
         public static event EventHandler<TextWrapping> OnDefaultTextWrappingChanged;
         public static event EventHandler<bool> OnDefaultLineHighlighterViewStateChanged;
         public static event EventHandler<bool> OnDefaultDisplayLineNumbersViewStateChanged;
@@ -23,55 +34,160 @@
         public static event EventHandler<bool> OnSessionBackupAndRestoreOptionChanged;
         public static event EventHandler<bool> OnHighlightMisspelledWordsChanged;
 
-        private static string _editorFontFamily;
+        public static void NotiyFontChange(bool fontFamily=false, bool fontSize = false, bool fontStyle = false, bool fontWeight = false)
+        {
+            if (fontFamily)
+                OnFontFamilyChanged?.Invoke(null, EditorFontFamily);
+            if (fontSize)
+                OnFontSizeChanged?.Invoke(null, EditorFontSize);
+            if (fontStyle)
+                OnFontStyleChanged?.Invoke(null, EditorFontStyle);
+            if (fontWeight)
+                OnFontWeightChanged?.Invoke(null, EditorFontWeight);
+        }
+
+        private static bool _editorUseAltFont;
+
+        public static bool EditorUseAltFont
+        {
+            get => _editorUseAltFont;
+            set
+            {
+                _editorUseAltFont = value;
+                NotiyFontChange(true, true, true, true);
+                OnUseAltFontChanged?.Invoke(null, value);
+            }
+        }
 
         public static string EditorFontFamily
         {
-            get => _editorFontFamily;
+            get => _editorUseAltFont ? EditorAltFontFamily : EditorDefaultFontFamily;
+        }
+
+        public static int EditorFontSize
+        {
+            get => _editorUseAltFont ? EditorAltFontSize : EditorDefaultFontSize;
+        }
+
+        public static FontStyle EditorFontStyle
+        {
+            get => _editorUseAltFont ? EditorAltFontStyle : EditorDefaultFontStyle;
+        }
+
+        public static FontWeight EditorFontWeight
+        {
+            get => _editorUseAltFont ? EditorAltFontWeight : EditorDefaultFontWeight;
+        }
+
+        private static string _editorDefaultFontFamily;
+
+        public static string EditorDefaultFontFamily
+        {
+            get => _editorDefaultFontFamily;
             set
             {
-                _editorFontFamily = value;
-                OnFontFamilyChanged?.Invoke(null, value);
+                _editorDefaultFontFamily = value;
+                // OnDefaultFontFamilyChanged?.Invoke(null, value);
+                NotiyFontChange(fontFamily: true);
                 ApplicationSettingsStore.Write(SettingsKey.EditorFontFamilyStr, value);
             }
         }
 
-        private static int _editorFontSize;
+        private static int _editorDefaultFontSize;
 
-        public static int EditorFontSize
+        public static int EditorDefaultFontSize
         {
-            get => _editorFontSize;
+            get => _editorDefaultFontSize;
             set
             {
-                _editorFontSize = value;
-                OnFontSizeChanged?.Invoke(null, value);
+                _editorDefaultFontSize = value;
+                //OnDefaultFontSizeChanged?.Invoke(null, value);
+                NotiyFontChange(fontSize: true);
                 ApplicationSettingsStore.Write(SettingsKey.EditorFontSizeInt, value);
             }
         }
 
-        private static FontStyle _editorFontStyle;
+        private static FontStyle _editorDefaultFontStyle;
 
-        public static FontStyle EditorFontStyle
+        public static FontStyle EditorDefaultFontStyle
         {
-            get => _editorFontStyle;
+            get => _editorDefaultFontStyle;
             set
             {
-                _editorFontStyle = value;
-                OnFontStyleChanged?.Invoke(null, value);
+                _editorDefaultFontStyle = value;
+                //OnDefaultFontStyleChanged?.Invoke(null, value);
+                NotiyFontChange(fontStyle: true);
                 ApplicationSettingsStore.Write(SettingsKey.EditorFontStyleStr, value.ToString());
             }
         }
 
-        private static FontWeight _editorFontWeight;
+        private static FontWeight _editorDefaultFontWeight;
 
-        public static FontWeight EditorFontWeight
+        public static FontWeight EditorDefaultFontWeight
         {
-            get => _editorFontWeight;
+            get => _editorDefaultFontWeight;
             set
             {
-                _editorFontWeight = value;
-                OnFontWeightChanged?.Invoke(null, value);
+                _editorDefaultFontWeight = value;
+                //OnDefaultFontWeightChanged?.Invoke(null, value);
+                NotiyFontChange(fontWeight: true);
                 ApplicationSettingsStore.Write(SettingsKey.EditorFontWeightUshort, value.Weight);
+            }
+        }
+
+        private static string _editorAltFontFamily;
+
+        public static string EditorAltFontFamily
+        {
+            get => _editorAltFontFamily;
+            set
+            {
+                _editorAltFontFamily = value;
+                //OnAltFontFamilyChanged?.Invoke(null, value);
+                NotiyFontChange(fontFamily: true);
+                ApplicationSettingsStore.Write(SettingsKey.EditorAltFontFamilyStr, value);
+            }
+        }
+
+        private static int _editorAltFontSize;
+
+        public static int EditorAltFontSize
+        {
+            get => _editorAltFontSize;
+            set
+            {
+                _editorAltFontSize = value;
+                //OnAltFontSizeChanged?.Invoke(null, value);
+                NotiyFontChange(fontSize: true);
+                ApplicationSettingsStore.Write(SettingsKey.EditorAltFontSizeInt, value);
+            }
+        }
+
+        private static FontStyle _editorAltFontStyle;
+
+        public static FontStyle EditorAltFontStyle
+        {
+            get => _editorAltFontStyle;
+            set
+            {
+                _editorAltFontStyle = value;
+                //OnAltFontStyleChanged?.Invoke(null, value);
+                NotiyFontChange(fontStyle: true);
+                ApplicationSettingsStore.Write(SettingsKey.EditorAltFontStyleStr, value.ToString());
+            }
+        }
+
+        private static FontWeight _editorAltFontWeight;
+
+        public static FontWeight EditorAltFontWeight
+        {
+            get => _editorAltFontWeight;
+            set
+            {
+                _editorAltFontWeight = value;
+                //OnAltFontWeightChanged?.Invoke(null, value);
+                NotiyFontChange(fontWeight: true);
+                ApplicationSettingsStore.Write(SettingsKey.EditorAltFontWeightUshort, value.Weight);
             }
         }
 
@@ -287,6 +403,8 @@
         public static void Initialize()
         {
             InitializeFontSettings();
+
+            InitializeAltFontSettings();
 
             InitializeTextWrappingSettings();
 
@@ -518,42 +636,85 @@
         {
             if (ApplicationSettingsStore.Read(SettingsKey.EditorFontFamilyStr) is string fontFamily)
             {
-                _editorFontFamily = fontFamily;
+                _editorDefaultFontFamily = fontFamily;
             }
             else
             {
-                _editorFontFamily = "Consolas";
+                _editorDefaultFontFamily = "Consolas";
             }
 
             if (ApplicationSettingsStore.Read(SettingsKey.EditorFontSizeInt) is int fontSize)
             {
-                _editorFontSize = fontSize;
+                _editorDefaultFontSize = fontSize;
             }
             else
             {
-                _editorFontSize = 14;
+                _editorDefaultFontSize = 14;
             }
 
             if (ApplicationSettingsStore.Read(SettingsKey.EditorFontStyleStr) is string fontStyleStr &&
                 Enum.TryParse(typeof(FontStyle), fontStyleStr, out var fontStyle))
             {
-                _editorFontStyle = (FontStyle)fontStyle;
+                _editorDefaultFontStyle = (FontStyle)fontStyle;
             }
             else
             {
-                _editorFontStyle = FontStyle.Normal;
+                _editorDefaultFontStyle = FontStyle.Normal;
             }
 
             if (ApplicationSettingsStore.Read(SettingsKey.EditorFontWeightUshort) is ushort fontWeight)
             {
-                _editorFontWeight = new FontWeight()
+                _editorDefaultFontWeight = new FontWeight()
                 {
                     Weight = fontWeight
                 };
             }
             else
             {
-                _editorFontWeight = FontWeights.Normal;
+                _editorDefaultFontWeight = FontWeights.Normal;
+            }
+        }
+
+        private static void InitializeAltFontSettings()
+        {
+            if (ApplicationSettingsStore.Read(SettingsKey.EditorAltFontFamilyStr) is string fontFamily)
+            {
+                _editorAltFontFamily = fontFamily;
+            }
+            else
+            {
+                _editorAltFontFamily = "Arial";
+            }
+
+            if (ApplicationSettingsStore.Read(SettingsKey.EditorAltFontSizeInt) is int fontSize)
+            {
+                _editorAltFontSize = fontSize;
+            }
+            else
+            {
+                _editorAltFontSize = 14;
+            }
+
+            if (ApplicationSettingsStore.Read(SettingsKey.EditorAltFontStyleStr) is string fontStyleStr &&
+                Enum.TryParse(typeof(FontStyle), fontStyleStr, out var fontStyle))
+            {
+                _editorAltFontStyle = (FontStyle)fontStyle;
+            }
+            else
+            {
+                _editorAltFontStyle = FontStyle.Normal;
+            }
+
+            if (ApplicationSettingsStore.Read(SettingsKey.EditorAltFontWeightUshort) is ushort fontWeight)
+            {
+                _editorAltFontWeight = new FontWeight()
+                {
+                    Weight = fontWeight
+                };
+            }
+            else
+            {
+                _editorAltFontWeight = FontWeights.Normal;
             }
         }
 

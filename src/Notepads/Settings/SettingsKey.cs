@@ -11,6 +11,7 @@
         // Theme related
         internal static string RequestedThemeStr = "RequestedThemeStr";
         internal static string UseWindowsThemeBool = "UseWindowsThemeBool";
+        internal static string UsePureDarkThemeBool = "UsePureDarkThemeBool";
         internal static string AppBackgroundTintOpacityDouble = "AppBackgroundTintOpacityDouble";
         internal static string AppAccentColorHexStr = "AppAccentColorHexStr";
         internal static string CustomAccentColorHexStr = "CustomAccentColorHexStr";
@@ -21,6 +22,10 @@
         internal static string EditorFontSizeInt = "EditorFontSizeInt";
         internal static string EditorFontStyleStr = "EditorFontStyleStr";
         internal static string EditorFontWeightUshort = "EditorFontWeightUshort";
+        internal static string EditorAltFontFamilyStr = "EditorAltFontFamilyStr";
+        internal static string EditorAltFontSizeInt = "EditorAltFontSizeInt";
+        internal static string EditorAltFontStyleStr = "EditorAltFontStyleStr";
+        internal static string EditorAltFontWeightUshort = "EditorAltFontWeightUshort";
         internal static string EditorDefaultTextWrappingStr = "EditorDefaultTextWrappingStr";
         internal static string EditorDefaultLineHighlighterViewStateBool = "EditorDefaultLineHighlighterViewStateBool";
         internal static string EditorDefaultLineEndingStr = "EditorDefaultLineEndingStr";

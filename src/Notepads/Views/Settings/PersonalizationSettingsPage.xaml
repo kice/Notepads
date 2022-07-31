@@ -33,6 +33,7 @@
                 <StackPanel x:Name="ThemePanel" Margin="0,10,0,0">
                     <RadioButton x:Uid="/Settings/PersonalizationPage_ThemeModeSettings_LightModeRadioButton" Style="{StaticResource CustomRadioButtonStyle}" x:Name="ThemeModeLightButton" Tag="Light" />
                     <RadioButton x:Uid="/Settings/PersonalizationPage_ThemeModeSettings_DarkModeRadioButton" Style="{StaticResource CustomRadioButtonStyle}" x:Name="ThemeModeDarkButton" Tag="Dark" />
+                    <RadioButton x:Uid="/Settings/PersonalizationPage_ThemeModeSettings_PureDarkModeRadioButton" Style="{StaticResource CustomRadioButtonStyle}" x:Name="ThemeModePureDarkButton" Tag="PureDark" />
                     <RadioButton x:Uid="/Settings/PersonalizationPage_ThemeModeSettings_WindowsModeRadioButton" Style="{StaticResource CustomRadioButtonStyle}" x:Name="ThemeModeDefaultButton" Tag="Default" />
                 </StackPanel>
                 <TextBlock x:Name="BackgroundTintOpacityTitle"

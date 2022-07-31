@@ -36,6 +36,11 @@
 
         private bool _shouldUpdateSearchString = true;
 
+        private double _cursorOffset = 0.0;
+
+        private CoreCursor _sizingCursor = new CoreCursor(CoreCursorType.SizeWestEast, 0);
+        private CoreCursor _arrowCursor = new CoreCursor(CoreCursorType.Arrow, 0);
+
         public FindAndReplaceControl()
         {
             InitializeComponent();
@@ -54,7 +59,11 @@
 
         public SearchContext GetSearchContext()
         {
-            return new SearchContext(FindBar.Text, MatchCaseToggle.IsChecked, MatchWholeWordToggle.IsChecked, UseRegexToggle.IsChecked);
+            bool matchCase = MatchCaseToggle.IsChecked != null && (bool)MatchCaseToggle.IsChecked;
+            bool matchWholeWord = MatchWholeWordToggle.IsChecked != null && (bool)MatchWholeWordToggle.IsChecked;
+            bool matchRegex = UseRegexToggle.IsChecked != null && (bool)UseRegexToggle.IsChecked;
+
+            return new SearchContext(FindBar.Text, matchCase, matchWholeWord, matchRegex);
         }
 
         private void FindAndReplaceControl_Loaded(object sender, RoutedEventArgs e)
@@ -260,20 +269,20 @@
             OnFindAndReplaceButtonClicked?.Invoke(sender, new FindAndReplaceEventArgs(GetSearchContext(), ReplaceBar.Text, FindAndReplaceMode.ReplaceAll));
         }
 
-        private void OptionButtonFlyoutItem_OnClick(object sender, RoutedEventArgs e)
-        {
-            MatchWholeWordToggle.IsEnabled = !UseRegexToggle.IsChecked;
-            UseRegexToggle.IsEnabled = !MatchWholeWordToggle.IsChecked;
+        // private void OptionButtonFlyoutItem_OnClick(object sender, RoutedEventArgs e)
+        // {
+        //     MatchWholeWordToggle.IsEnabled = !UseRegexToggle.IsChecked;
+        //     UseRegexToggle.IsEnabled = !MatchWholeWordToggle.IsChecked;
 
-            if (MatchCaseToggle.IsChecked || MatchWholeWordToggle.IsChecked || UseRegexToggle.IsChecked)
-            {
-                OptionButtonSelectionIndicator.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                OptionButtonSelectionIndicator.Visibility = Visibility.Collapsed;
-            }
-        }
+        //     if (MatchCaseToggle.IsChecked || MatchWholeWordToggle.IsChecked || UseRegexToggle.IsChecked)
+        //     {
+        //         OptionButtonSelectionIndicator.Visibility = Visibility.Visible;
+        //     }
+        //     else
+        //     {
+        //         OptionButtonSelectionIndicator.Visibility = Visibility.Collapsed;
+        //     }
+        // }
 
         private void FindAndReplaceRootGrid_KeyDown(object sender, KeyRoutedEventArgs e)
         {
@@ -302,6 +311,41 @@
         {
             _shouldUpdateSearchString = false;
             OnToggleReplaceModeButtonClicked?.Invoke(sender, ReplaceBarPlaceHolder.Visibility == Visibility.Collapsed ? true : false);
+        }
+
+        private void ResizeGripper_DragDelta(object sender, Windows.UI.Xaml.Controls.Primitives.DragDeltaEventArgs e)
+        {
+            if (Window.Current.CoreWindow.PointerCursor.Type != CoreCursorType.SizeWestEast)
+            {
+                Window.Current.CoreWindow.PointerCursor = _sizingCursor;
+            }
+
+            var minWidth = 250;
+            var maxWidth = Window.Current.Content.ActualSize.X - 50;
+
+            var delta = e.HorizontalChange;
+            var newWidth = Width - delta;
+            if (newWidth < minWidth || newWidth > maxWidth || Math.Abs(_cursorOffset) >= 1.0)
+            {
+                _cursorOffset -= delta;
+            }
+
+            if (Math.Abs(_cursorOffset) < 1.0)
+            {
+                _cursorOffset = 0.0;
+                Width = Math.Clamp(newWidth, minWidth, maxWidth);
+            }
+        }
+
+        private void ResizeGripper_DragStarted(object sender, Windows.UI.Xaml.Controls.Primitives.DragStartedEventArgs e)
+        {
+            _cursorOffset = 0;
+            Window.Current.CoreWindow.PointerCursor = _sizingCursor;
+        }
+
+        private void ResizeGripper_DragCompleted(object sender, Windows.UI.Xaml.Controls.Primitives.DragCompletedEventArgs e)
+        {
+            Window.Current.CoreWindow.PointerCursor = _arrowCursor;
         }
     }
 }

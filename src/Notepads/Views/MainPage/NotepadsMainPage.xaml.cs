@@ -158,6 +158,7 @@
                 new KeyboardCommand<KeyRoutedEventArgs>(VirtualKey.Escape, (args) => { if (RootSplitView.IsPaneOpen) RootSplitView.IsPaneOpen = false; }),
                 new KeyboardCommand<KeyRoutedEventArgs>(VirtualKey.F1, (args) => { if (App.IsPrimaryInstance && !App.IsGameBarWidget) RootSplitView.IsPaneOpen = !RootSplitView.IsPaneOpen; }),
                 new KeyboardCommand<KeyRoutedEventArgs>(VirtualKey.F2, async (args) => { await RenameFileAsync(NotepadsCore.GetSelectedTextEditor()); }),
+                new KeyboardCommand<KeyRoutedEventArgs>(VirtualKey.F6, (args) => { AppSettingsService.EditorUseAltFont = !AppSettingsService.EditorUseAltFont; }),
                 new KeyboardCommand<KeyRoutedEventArgs>(true, true, true, VirtualKey.L, async (args) => { await OpenFile(LoggingService.GetLogFile(), rebuildOpenRecentItems: false); })
             });
         }
@@ -374,7 +375,8 @@
                         {
                             if (count == 1)
                             {
-                                _appShouldExitAfterLastEditorClosed = true;
+                                // _appShouldExitAfterLastEditorClosed = true;
+                                _notepadsCore.TextEditorUnloaded -= OnTextEditorUnloaded;
                             }
                             NotepadsCore.DeleteTextEditor(textEditor);
                             count--;
@@ -471,9 +473,10 @@
 
         private void OnTextEditorUnloaded(object sender, ITextEditor textEditor)
         {
-            if (NotepadsCore.GetNumberOfOpenedTextEditors() == 0 && !_appShouldExitAfterLastEditorClosed)
+            if (NotepadsCore.GetNumberOfOpenedTextEditors() == 0)
             {
-                NotepadsCore.OpenNewTextEditor(_defaultNewFileName);
+                // NotepadsCore.OpenNewTextEditor(_defaultNewFileName);
+                Application.Current.Exit();
             }
         }
 
@@ -505,7 +508,8 @@
             // Notepads should exit if last tab was dragged to another app instance
             if (NotepadsCore.GetNumberOfOpenedTextEditors() == 1)
             {
-                _appShouldExitAfterLastEditorClosed = true;
+                // _appShouldExitAfterLastEditorClosed = true;
+                _notepadsCore.TextEditorUnloaded -= OnTextEditorUnloaded;
 
                 NotepadsCore.DeleteTextEditor(textEditor);
 
@@ -526,8 +530,9 @@
         {
             if (NotepadsCore.GetNumberOfOpenedTextEditors() == 1 && textEditor.IsModified == false && textEditor.EditingFile == null)
             {
-                // Do nothing
-                // Take no action if user is trying to close the last tab and the last tab is a new empty document
+                // if user is trying to close the last tab and the last tab is a new empty document
+                Application.Current.Exit();
+                return;
             }
             else if (!textEditor.IsModified)
             {

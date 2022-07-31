@@ -27,6 +27,7 @@
             await Dispatcher.CallOnUIThreadAsync(() =>
             {
                 ThemeSettingsService.SetRequestedTheme(RootGrid, Window.Current.Content, ApplicationView.GetForCurrentView().TitleBar);
+                UpdateThemeIndicator();
             });
         }
 
@@ -35,6 +36,7 @@
             await Dispatcher.CallOnUIThreadAsync(() =>
             {
                 RootGrid.Background = backgroundBrush;
+                UpdateThemeIndicator();
             });
         }
     }

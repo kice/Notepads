@@ -421,4 +421,31 @@
     <value>System Default</value>
     <comment>AdvancedPage LanguagePreferenceSettings System Default option text.</comment>
   </data>
+  <data name="TextAndEditorPage_AltFontSettings_Title.Text" xml:space="preserve">
+    <value>Alternative Font &amp; Size</value>
+    <comment>TextAndEditorPage FontSettings Title display text.</comment>
+  </data>
+  <data name="TextAndEditorPage_AltFontStyleSettings_Title.Text" xml:space="preserve">
+    <value>Alternative Font Style</value>
+    <comment>TextAndEditorPage FontStyleSettings Title display text.</comment>
+  </data>
+  <data name="TextAndEditorPage_AltFontWeightSettings_Title.Text" xml:space="preserve">
+    <value>Alternative Font Weight</value>
+    <comment>TextAndEditorPage FontWeightSettings Title display text.</comment>
+  </data>
+  <data name="StatusBar_ThemeModeSettings_Light.Text" xml:space="preserve">
+    <value>Light</value>
+  </data>
+  <data name="StatusBar_ThemeModeSettings_Dark.Text" xml:space="preserve">
+    <value>Dark</value>
+  </data>
+  <data name="StatusBar_ThemeModeSettings_PureDark.Text" xml:space="preserve">
+    <value>Black</value>
+  </data>
+  <data name="StatusBar_ThemeModeSettings_System.Text" xml:space="preserve">
+    <value>System Theme</value>
+  </data>
+  <data name="PersonalizationPage_ThemeModeSettings_PureDarkModeRadioButton.Content" xml:space="preserve">
+    <value>Black</value>
+  </data>
 </root>

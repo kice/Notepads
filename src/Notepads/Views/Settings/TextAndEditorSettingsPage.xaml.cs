@@ -92,10 +92,16 @@
             HighlightMisspelledWordsToggle.IsOn = AppSettingsService.IsHighlightMisspelledWordsEnabled;
             LineHighlighterToggle.IsOn = AppSettingsService.EditorDisplayLineHighlighter;
             LineNumbersToggle.IsOn = AppSettingsService.EditorDisplayLineNumbers;
-            FontFamilyPicker.SelectedItem = AppSettingsService.EditorFontFamily;
-            FontSizePicker.SelectedItem = AppSettingsService.EditorFontSize;
-            FontStylePicker.SelectedItem = AvailableFontStyles.FirstOrDefault(style => style.FontStyle == AppSettingsService.EditorFontStyle);
-            FontWeightPicker.SelectedItem = AvailableFontWeights.FirstOrDefault(weight => weight.FontWeight.Weight == AppSettingsService.EditorFontWeight.Weight);
+
+            FontFamilyPicker.SelectedItem = AppSettingsService.EditorDefaultFontFamily;
+            FontSizePicker.SelectedItem = AppSettingsService.EditorDefaultFontSize;
+            FontStylePicker.SelectedItem = AvailableFontStyles.FirstOrDefault(style => style.FontStyle == AppSettingsService.EditorDefaultFontStyle);
+            FontWeightPicker.SelectedItem = AvailableFontWeights.FirstOrDefault(weight => weight.FontWeight.Weight == AppSettingsService.EditorDefaultFontWeight.Weight);
+
+            AltFontFamilyPicker.SelectedItem = AppSettingsService.EditorAltFontFamily;
+            AltFontSizePicker.SelectedItem = AppSettingsService.EditorAltFontSize;
+            AltFontStylePicker.SelectedItem = AvailableFontStyles.FirstOrDefault(style => style.FontStyle == AppSettingsService.EditorAltFontStyle);
+            AltFontWeightPicker.SelectedItem = AvailableFontWeights.FirstOrDefault(weight => weight.FontWeight.Weight == AppSettingsService.EditorAltFontWeight.Weight);
 
             InitializeLineEndingSettings();
 
@@ -219,10 +225,16 @@
             HighlightMisspelledWordsToggle.Toggled += HighlightMisspelledWordsToggle_OnToggled;
             LineHighlighterToggle.Toggled += LineHighlighterToggle_OnToggled;
             LineNumbersToggle.Toggled += LineNumbersToggle_Toggled;
+
             FontFamilyPicker.SelectionChanged += FontFamilyPicker_OnSelectionChanged;
             FontSizePicker.SelectionChanged += FontSizePicker_OnSelectionChanged;
             FontStylePicker.SelectionChanged += FontStylePicker_OnSelectionChanged;
             FontWeightPicker.SelectionChanged += FontWeightPicker_OnSelectionChanged;
+
+            AltFontFamilyPicker.SelectionChanged += AltFontFamilyPicker_OnSelectionChanged;
+            AltFontSizePicker.SelectionChanged += AltFontSizePicker_OnSelectionChanged;
+            AltFontStylePicker.SelectionChanged += AltFontStylePicker_OnSelectionChanged;
+            AltFontWeightPicker.SelectionChanged += AltFontWeightPicker_OnSelectionChanged;
 
             CrlfRadioButton.Checked += LineEndingRadioButton_OnChecked;
             CrRadioButton.Checked += LineEndingRadioButton_OnChecked;
@@ -364,24 +376,47 @@
         private void FontFamilyPicker_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var fontFamily = new FontFamily((string)e.AddedItems.First());
-            AppSettingsService.EditorFontFamily = fontFamily.Source;
+            AppSettingsService.EditorDefaultFontFamily = fontFamily.Source;
             FontStylePicker.FontFamily = fontFamily;
             FontWeightPicker.FontFamily = fontFamily;
         }
 
         private void FontSizePicker_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            AppSettingsService.EditorFontSize = (int)e.AddedItems.First();
+            AppSettingsService.EditorDefaultFontSize = (int)e.AddedItems.First();
         }
 
         private void FontStylePicker_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            AppSettingsService.EditorFontStyle = ((FontStyleItem)e.AddedItems.First()).FontStyle;
+            AppSettingsService.EditorDefaultFontStyle = ((FontStyleItem)e.AddedItems.First()).FontStyle;
         }
 
         private void FontWeightPicker_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            AppSettingsService.EditorFontWeight = ((FontWeightItem)e.AddedItems.First()).FontWeight;
+            AppSettingsService.EditorDefaultFontWeight = ((FontWeightItem)e.AddedItems.First()).FontWeight;
+        }
+
+        private void AltFontFamilyPicker_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var fontFamily = new FontFamily((string)e.AddedItems.First());
+            AppSettingsService.EditorAltFontFamily = fontFamily.Source;
+            FontStylePicker.FontFamily = fontFamily;
+            FontWeightPicker.FontFamily = fontFamily;
+        }
+
+        private void AltFontSizePicker_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            AppSettingsService.EditorAltFontSize = (int)e.AddedItems.First();
+        }
+
+        private void AltFontStylePicker_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            AppSettingsService.EditorAltFontStyle = ((FontStyleItem)e.AddedItems.First()).FontStyle;
+        }
+
+        private void AltFontWeightPicker_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            AppSettingsService.EditorAltFontWeight = ((FontWeightItem)e.AddedItems.First()).FontWeight;
         }
 
         private void TextWrappingToggle_OnToggled(object sender, RoutedEventArgs e)

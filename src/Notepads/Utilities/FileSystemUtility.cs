@@ -429,9 +429,85 @@
             return reader;
         }
 
+        private static bool TryGuessShiftJIS(Stream stream)
+        {
+            if (!stream.CanSeek)
+            {
+                return false;
+            }
+
+            var shift_jis = Encoding.GetEncoding("shift_jis");
+            var decoder = shift_jis.GetDecoder();
+            decoder.Fallback = DecoderFallback.ExceptionFallback;
+
+            byte[] seq = new byte[2];
+            char[] buffer = new char[8];
+
+            bool isDoubleBytes = false;
+            stream.Seek(0, SeekOrigin.Begin);
+
+            while (stream.CanRead)
+            {
+                var j = stream.ReadByte();
+                if (j == -1)
+                {
+                    break;
+                }
+
+                if (j < 0x80)
+                {
+                    // ascii character
+                    continue;
+                }
+                else if (0xA1 <= j && j <= 0xDF)
+                {
+                    // single-byte half-width katakana
+                    isDoubleBytes = true;
+                    continue;
+                }
+
+                // except two bytes encoded, 
+                var k = stream.ReadByte();
+                if (k == -1)
+                {
+                    return false;
+                }
+                else if (k <= 0x3F || k == 0x7F || k >= 0xFD)
+                {
+                    // unused second byte
+                    return false;
+                }
+
+                try
+                {
+                    seq[0] = (byte)j;
+                    seq[1] = (byte)k;
+                    var decoded = decoder.GetChars(seq, 0, 2, buffer, 0);
+                    if (decoded != 1)
+                    {
+                        return false;
+                    }
+                }
+                catch(DecoderFallbackException)
+                {
+                    return false;
+                }
+
+                isDoubleBytes = true;
+            }
+
+            return isDoubleBytes;
+        }
+
         public static bool TryGuessEncoding(Stream stream, out Encoding encoding)
         {
             encoding = null;
+
+            if (stream.Length == 0)
+            {
+                // We do not care about empty file
+                return false;
+            }
 
             try
             {
@@ -441,7 +517,12 @@
                     encoding = AnalyzeAndGuessEncoding(result);
                     return true;
                 }
-                else if (stream.Length > 0) // We do not care about empty file
+                else if (TryGuessShiftJIS(stream)) // UTF Unknown is not good for this
+                {
+                    encoding = Encoding.GetEncoding("shift_jis");
+                    return true;
+                }
+                else
                 {
                     Analytics.TrackEvent("UnableToDetectEncoding");
                 }

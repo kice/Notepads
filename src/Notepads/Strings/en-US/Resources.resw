@@ -693,4 +693,22 @@
     <value>File extension "{0}" is not supported at this moment</value>
     <comment>FileRenameError: Extension is not currently supported. {0} stands for the file extension string.</comment>
   </data>
+  <data name="App_FontIndicator_Description" xml:space="preserve">
+    <value>Toggle text editor font</value>
+  </data>
+  <data name="App_AltFont_Name" xml:space="preserve">
+    <value>Alt</value>
+  </data>
+  <data name="App_ThemeModeSettings_Light" xml:space="preserve">
+    <value>Light</value>
+  </data>
+  <data name="App_ThemeModeSettings_Dark" xml:space="preserve">
+    <value>Dark</value>
+  </data>
+  <data name="App_ThemeModeSettings_PureDark" xml:space="preserve">
+    <value>Black</value>
+  </data>
+  <data name="App_ThemeModeSettings_System" xml:space="preserve">
+    <value>System</value>
+  </data>
 </root>

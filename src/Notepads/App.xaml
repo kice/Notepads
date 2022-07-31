@@ -42,6 +42,8 @@
                 <Setter Property="Foreground" Value="{ThemeResource SystemBaseMediumHighColor}"/>
             </Style>
 
+            <FontFamily x:Key="codicon">/Assets/codicon.ttf#codicon</FontFamily>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

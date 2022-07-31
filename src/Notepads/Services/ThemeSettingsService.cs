@@ -102,6 +102,8 @@
             }
         }
 
+        public static bool PureDark { get; private set; }
+
         public static void Initialize()
         {
             InitializeThemeMode();
@@ -193,6 +195,16 @@
                         ThemeMode = (ElementTheme)theme;
                     }
                 }
+
+                PureDark = false;
+
+                if (ApplicationSettingsStore.Read(SettingsKey.UsePureDarkThemeBool) is string usePureDark)
+                {
+                    if (bool.TryParse(usePureDark, out var pureDark))
+                    {
+                        PureDark = ThemeMode == ElementTheme.Dark && pureDark;
+                    }
+                }
             }
         }
 
@@ -204,12 +216,14 @@
             }
         }
 
-        public static void SetTheme(ElementTheme theme)
+        public static void SetTheme(ElementTheme theme, bool pureDark = false)
         {
-            if (ThemeMode != theme)
+            if (ThemeMode != theme || PureDark != pureDark)
             {
+                PureDark = pureDark && theme == ElementTheme.Dark;
                 ThemeMode = theme;
                 ApplicationSettingsStore.Write(SettingsKey.RequestedThemeStr, ThemeMode.ToString());
+                ApplicationSettingsStore.Write(SettingsKey.UsePureDarkThemeBool, PureDark.ToString());
                 OnThemeChanged?.Invoke(null, theme);
             }
         }
@@ -266,10 +280,13 @@
 
         private static Brush GetAppBackgroundBrush(ElementTheme theme)
         {
+            var pureDarkModeBaseColor = Color.FromArgb(255, 0, 0, 0);
             var darkModeBaseColor = Color.FromArgb(255, 46, 46, 46);
             var lightModeBaseColor = Color.FromArgb(255, 240, 240, 240);
 
-            var baseColor = theme == ElementTheme.Light ? lightModeBaseColor : darkModeBaseColor;
+            var baseColor = theme == ElementTheme.Light 
+                ? lightModeBaseColor 
+                : PureDark ? pureDarkModeBaseColor : darkModeBaseColor;
 
             if (AppBackgroundPanelTintOpacity > 0.99f ||
                 !Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.Xaml.Media.AcrylicBrush") ||

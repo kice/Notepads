@@ -421,4 +421,31 @@
     <value>System Default</value>
     <comment>AdvancedPage LanguagePreferenceSettings System Default option text.</comment>
   </data>
+  <data name="TextAndEditorPage_AltFontSettings_Title.Text" xml:space="preserve">
+    <value>備用字型和大小</value>
+    <comment>TextAndEditorPage FontSettings Title display text.</comment>
+  </data>
+  <data name="TextAndEditorPage_AltFontStyleSettings_Title.Text" xml:space="preserve">
+    <value>備用字型樣式</value>
+    <comment>TextAndEditorPage FontStyleSettings Title display text.</comment>
+  </data>
+  <data name="TextAndEditorPage_AltFontWeightSettings_Title.Text" xml:space="preserve">
+    <value>備用字型粗細</value>
+    <comment>TextAndEditorPage FontWeightSettings Title display text.</comment>
+  </data>
+  <data name="StatusBar_ThemeModeSettings_Light.Text" xml:space="preserve">
+    <value>淺色</value>
+  </data>
+  <data name="StatusBar_ThemeModeSettings_Dark.Text" xml:space="preserve">
+    <value>深色</value>
+  </data>
+  <data name="StatusBar_ThemeModeSettings_PureDark.Text" xml:space="preserve">
+    <value>純黑</value>
+  </data>
+  <data name="StatusBar_ThemeModeSettings_System.Text" xml:space="preserve">
+    <value>系統主題</value>
+  </data>
+  <data name="PersonalizationPage_ThemeModeSettings_PureDarkModeRadioButton.Content" xml:space="preserve">
+    <value>純黑</value>
+  </data>
 </root>

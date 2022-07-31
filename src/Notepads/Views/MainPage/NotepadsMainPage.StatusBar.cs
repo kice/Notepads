@@ -25,6 +25,7 @@
         {
             ShowHideStatusBar(AppSettingsService.ShowStatusBar);
             AppSettingsService.OnStatusBarVisibilityChanged += OnStatusBarVisibilityChanged;
+            AppSettingsService.OnUseAltFontChanged += OnUseAltFontChanged;
         }
 
         private void SetupStatusBar(ITextEditor textEditor)
@@ -35,8 +36,10 @@
             UpdatePathIndicator(textEditor);
             UpdateEditorModificationIndicator(textEditor);
             UpdateLineColumnIndicator(textEditor);
+            UpdateFontIndicator();
             UpdateFontZoomIndicator(textEditor);
             UpdateLineEndingIndicator(textEditor.GetLineEnding());
+            UpdateThemeIndicator();
             UpdateEncodingIndicator(textEditor.GetEncoding());
             UpdateShadowWindowIndicator();
         }
@@ -156,10 +159,69 @@
                     selectedCount, wordSelected);
         }
 
+        private void OnUseAltFontChanged(object sender, bool e)
+        {
+            UpdateFontIndicator();
+        }
+
+        private void UpdateFontIndicator()
+        {
+            if (StatusBar == null) return;
+            var usingAltFont = AppSettingsService.EditorUseAltFont;
+            var fontFamily = AppSettingsService.EditorFontFamily;
+            var fontSize = AppSettingsService.EditorFontSize;
+            var altFontName = _resourceLoader.GetString("App_AltFont_Name");
+            var postfix = usingAltFont ? $" ({altFontName})" : "";
+            FontIndicator.Text = $"{fontFamily} - {fontSize}{postfix}";
+
+            ToolTipService.SetToolTip(FontIndicator, _resourceLoader.GetString("App_FontIndicator_Description"));
+        }
+
+        private void UpdateThemeIndicator()
+        {
+            if (StatusBar == null) return;
+
+            var opacity = ThemeSettingsService.AppBackgroundPanelTintOpacity * 100;
+            OpacitySlider.Value = opacity;
+
+
+            var themeName = "???";
+            if (ThemeSettingsService.UseWindowsTheme)
+            {
+                themeName = _resourceLoader.GetString("App_ThemeModeSettings_System");
+            }
+            else
+            {
+                switch (ThemeSettingsService.ThemeMode)
+                {
+                    case ElementTheme.Light:
+                        themeName = _resourceLoader.GetString("App_ThemeModeSettings_Light");
+                        break;
+                    case ElementTheme.Dark:
+                        if (ThemeSettingsService.PureDark)
+                        {
+                            themeName = _resourceLoader.GetString("App_ThemeModeSettings_PureDark");
+                        }
+                        else
+                        {
+                            themeName = _resourceLoader.GetString("App_ThemeModeSettings_Dark");
+                        }
+                        break;
+                }
+            }
+
+            var postfix = opacity.ToString("F0") + "%";
+            ThemeIndicator.Text = $"{themeName} ({postfix})";
+        }
+
         private void UpdateFontZoomIndicator(ITextEditor textEditor)
         {
             if (StatusBar == null) return;
             var fontZoomFactor = Math.Round(textEditor.GetFontZoomFactor());
+            FontZoomIconIndicator.Text = fontZoomFactor == 100
+                ? "\uE71E"
+                : fontZoomFactor < 100 ? "\uE71F" : "\uE8A3";
+
             FontZoomIndicator.Text = fontZoomFactor.ToString(CultureInfo.InvariantCulture) + "%";
             FontZoomSlider.Value = fontZoomFactor;
         }
@@ -337,6 +399,14 @@
             {
                 LineColumnIndicatorClicked(selectedEditor);
             }
+            else if (sender == FontIndicator)
+            {
+                FontIndicatorClicked();
+            }
+            else if (sender == ThemeIndicator)
+            {
+                ThemeIndicatorClicked();
+            }
             else if (sender == FontZoomIndicator)
             {
                 FontZoomIndicatorClicked(selectedEditor);
@@ -422,6 +492,76 @@
         private static void LineColumnIndicatorClicked(ITextEditor selectedEditor)
         {
             selectedEditor.ShowGoToControl();
+        }
+
+        private static void FontIndicatorClicked()
+        {
+            AppSettingsService.EditorUseAltFont = !AppSettingsService.EditorUseAltFont;
+        }
+
+        private void ThemeSelectionFlyoutOpacity_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (!(sender is AppBarButton button)) return;
+
+            const int step = 5;
+
+            switch (button.Name)
+            {
+                case "OpacityIncrease":
+                    ThemeSettingsService.AppBackgroundPanelTintOpacity = Math.Clamp(OpacitySlider.Value % step > 0
+                        ? Math.Ceiling(OpacitySlider.Value / step) * step
+                        : OpacitySlider.Value + step, 0, 100) / 100;
+                    break;
+                case "OpacityDecrease":
+                    ThemeSettingsService.AppBackgroundPanelTintOpacity = Math.Clamp(OpacitySlider.Value % step > 0
+                        ? Math.Floor(OpacitySlider.Value / step) * step
+                        : OpacitySlider.Value - step, 0, 100) / 100;
+                    break;
+            }
+        }
+
+        private void OpacitySlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        {
+            if (!(sender is Slider)) return;
+
+            if (Math.Abs(e.NewValue - e.OldValue) > 0.1)
+            {
+                ThemeSettingsService.AppBackgroundPanelTintOpacity = e.NewValue / 100;
+            }
+        }
+
+        private void ThemeSelection_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (!(sender is MenuFlyoutItem item)) return;
+
+            var theme = (string)item.Tag;
+            if (theme == "Theme_System")
+            {
+                ThemeSettingsService.UseWindowsTheme = true;
+            }
+            else if (theme == "Theme_Light")
+            {
+                ThemeSettingsService.UseWindowsTheme = false;
+                ThemeSettingsService.SetTheme(ElementTheme.Light);
+            }
+            else if (theme == "Theme_Dark")
+            {
+                ThemeSettingsService.UseWindowsTheme = false;
+                ThemeSettingsService.SetTheme(ElementTheme.Dark);
+            }
+            else if (theme == "Theme_PureDark")
+            {
+                ThemeSettingsService.UseWindowsTheme = false;
+                ThemeSettingsService.SetTheme(ElementTheme.Dark, true);
+            }
+
+            UpdateThemeIndicator();
+            ThemeIndicator?.ContextFlyout.Hide();
+        }
+
+        private void ThemeIndicatorClicked()
+        {
+            ThemeIndicator?.ContextFlyout.ShowAt(ThemeIndicator);
         }
 
         private void FontZoomIndicatorClicked(ITextEditor _)
@@ -513,7 +653,7 @@
                 new UTF8Encoding(false), // "UTF-8"
                 new UTF8Encoding(true), // "UTF-8-BOM"
                 new UnicodeEncoding(false, true), // "UTF-16 LE BOM"
-                new UnicodeEncoding(true, true), // "UTF-16 BE BOM"
+                Encoding.GetEncoding("shift_jis"),
             };
 
             foreach (var encoding in unicodeEncodings)

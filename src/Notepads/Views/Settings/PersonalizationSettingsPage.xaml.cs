@@ -30,7 +30,8 @@
                         ThemeModeLightButton.IsChecked = true;
                         break;
                     case ElementTheme.Dark:
-                        ThemeModeDarkButton.IsChecked = true;
+                        ThemeModeDarkButton.IsChecked = !ThemeSettingsService.PureDark;
+                        ThemeModePureDarkButton.IsChecked = ThemeSettingsService.PureDark;
                         break;
                 }
             }
@@ -72,6 +73,7 @@
             ThemeModeDefaultButton.Checked += ThemeRadioButton_OnChecked;
             ThemeModeLightButton.Checked += ThemeRadioButton_OnChecked;
             ThemeModeDarkButton.Checked += ThemeRadioButton_OnChecked;
+            ThemeModePureDarkButton.Checked += ThemeRadioButton_OnChecked;
             BackgroundTintOpacitySlider.ValueChanged += BackgroundTintOpacitySlider_OnValueChanged;
             AccentColorToggle.Toggled += WindowsAccentColorToggle_OnToggled;
             AccentColorPicker.ColorChanged += AccentColorPicker_OnColorChanged;
@@ -130,6 +132,10 @@
                     case "Dark":
                         ThemeSettingsService.UseWindowsTheme = false;
                         ThemeSettingsService.SetTheme(ElementTheme.Dark);
+                        break;
+                    case "PureDark":
+                        ThemeSettingsService.UseWindowsTheme = false;
+                        ThemeSettingsService.SetTheme(ElementTheme.Dark, true);
                         break;
                     case "Default":
                         ThemeSettingsService.UseWindowsTheme = true;

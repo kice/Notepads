@@ -279,10 +279,14 @@
                     <Setter Property="Opacity" Value="1.0"/>
                     <Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseMediumHighBrush}"/>
                 </Style>
+
             </Grid.Resources>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" MinWidth="4"/>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
@@ -507,15 +511,123 @@
                         </Core:ChangePropertyAction>
                     </Core:EventTriggerBehavior>
                 </Interactivity:Interaction.Behaviors>
+                <TextBlock x:Name="FontIndicator" Style="{StaticResource StatusBarTextBlockStyle}"
+                           IsTapEnabled="True"
+                           Tapped="StatusBarComponent_OnTapped">
+                </TextBlock>
+            </Grid>
+            <Grid Column="5"
+                  extensions:Mouse.Cursor="Hand">
+                <Interactivity:Interaction.Behaviors>
+                    <Core:EventTriggerBehavior EventName="PointerEntered">
+                        <Core:ChangePropertyAction PropertyName="Background">
+                            <Core:ChangePropertyAction.Value>
+                                <SolidColorBrush Color="{ThemeResource SystemRevealListLowColor}"/>
+                            </Core:ChangePropertyAction.Value>
+                        </Core:ChangePropertyAction>
+                    </Core:EventTriggerBehavior>
 
-                <TextBlock x:Name="FontZoomIndicator" Style="{StaticResource StatusBarTextBlockStyle}"
+                    <Core:EventTriggerBehavior EventName="PointerExited">
+                        <Core:ChangePropertyAction PropertyName="Background">
+                            <Core:ChangePropertyAction.Value>
+                                <SolidColorBrush Color="Transparent"/>
+                            </Core:ChangePropertyAction.Value>
+                        </Core:ChangePropertyAction>
+                    </Core:EventTriggerBehavior>
+                </Interactivity:Interaction.Behaviors>
+
+                <TextBlock x:Name="ThemeIndicator" Style="{StaticResource StatusBarTextBlockStyle}" 
                            IsTapEnabled="True"
                            Tapped="StatusBarComponent_OnTapped">
                     <TextBlock.ContextFlyout>
-                        <Flyout x:Name="FontZoomIndicatorFlyout" Placement="TopEdgeAlignedRight" Closing="StatusBarFlyout_OnClosing">
-                            <StackPanel>
+                        <Flyout x:Name="ThemeSelectionFlyout" Placement="TopEdgeAlignedRight" Closing="StatusBarFlyout_OnClosing">
+                            <StackPanel Orientation="Vertical" Margin="0" Padding="0">
+                                <MenuFlyoutItem x:Uid="/Settings/StatusBar_ThemeModeSettings_System" Tag="Theme_System" Click="ThemeSelection_OnClick"/>
+                                <MenuFlyoutItem x:Uid="/Settings/StatusBar_ThemeModeSettings_Light" Tag="Theme_Light" Click="ThemeSelection_OnClick"/>
+                                <MenuFlyoutItem x:Uid="/Settings/StatusBar_ThemeModeSettings_Dark" Tag="Theme_Dark" Click="ThemeSelection_OnClick"/>
+                                <MenuFlyoutItem x:Uid="/Settings/StatusBar_ThemeModeSettings_PureDark" Tag="Theme_PureDark" Click="ThemeSelection_OnClick"/>
                                 <StackPanel Orientation="Horizontal" Margin="-10,0,-10,0">
-                                    <AppBarButton x:Name="ZoomOut" 
+                                    <AppBarButton x:Name="OpacityDecrease" 
+                                                  x:Uid="TextEditor_FontZoomIndicator_FlyoutItem_ZoomOut"
+                                                  LabelPosition="Collapsed"
+                                                  VerticalAlignment="Center"
+                                                  BorderBrush="{ThemeResource SystemControlBackgroundTransparentRevealBorderBrush}"
+                                                  Width="40"
+                                                  Click="ThemeSelectionFlyoutOpacity_OnClick">
+                                        <AppBarButton.Icon>
+                                            <FontIcon Glyph="&#xE108;" FontFamily="Segoe MDL2 Assets"/>
+                                        </AppBarButton.Icon>
+                                    </AppBarButton>
+                                    <Slider x:Name="OpacitySlider" 
+                                            Style="{StaticResource CustomSliderStyle}"
+                                            Minimum="0" Maximum="100" Value="100"
+                                            VerticalAlignment="Center" Width="150"
+                                            Margin="5"
+                                            ValueChanged="OpacitySlider_ValueChanged"/>
+                                    <AppBarButton x:Name="OpacityIncrease"
+                                                  x:Uid="TextEditor_FontZoomIndicator_FlyoutItem_ZoomIn"
+                                                  LabelPosition="Collapsed" 
+                                                  VerticalAlignment="Center"
+                                                  BorderBrush="{ThemeResource SystemControlBackgroundTransparentRevealBorderBrush}"
+                                                  Width="40"
+                                                  Click="ThemeSelectionFlyoutOpacity_OnClick">
+                                        <AppBarButton.Icon>
+                                            <FontIcon Glyph="&#xE109;" FontFamily="Segoe MDL2 Assets"/>
+                                        </AppBarButton.Icon>
+                                    </AppBarButton>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="5,-5,0,0">
+                                    <TextBlock x:Name="MinOpacity" Text="0%" Margin="30,0,0,0" FontSize="10"/>
+                                    <TextBlock x:Name="MaxOpacity" Text="100%" Margin="108,0,0,0" FontSize="10"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,-15,0,0">
+                                    <TextBlock Text="{x:Bind OpacitySlider.Value,Mode=OneWay}" VerticalAlignment="Center" FontSize="15"/>
+                                    <TextBlock Text="%" VerticalAlignment="Center" FontSize="15"/>
+                                </StackPanel>
+                            </StackPanel>
+                            <Flyout.FlyoutPresenterStyle>
+                                <Style TargetType="FlyoutPresenter">
+                                    <Setter Property="BorderThickness" Value="0" />
+                                </Style>
+                            </Flyout.FlyoutPresenterStyle>
+                        </Flyout>
+                    </TextBlock.ContextFlyout>
+                </TextBlock>
+            </Grid>
+            <Grid Column="7"
+                  extensions:Mouse.Cursor="Hand">
+                <Interactivity:Interaction.Behaviors>
+                    <Core:EventTriggerBehavior EventName="PointerEntered">
+                        <Core:ChangePropertyAction PropertyName="Background">
+                            <Core:ChangePropertyAction.Value>
+                                <SolidColorBrush Color="{ThemeResource SystemRevealListLowColor}"/>
+                            </Core:ChangePropertyAction.Value>
+                        </Core:ChangePropertyAction>
+                    </Core:EventTriggerBehavior>
+
+                    <Core:EventTriggerBehavior EventName="PointerExited">
+                        <Core:ChangePropertyAction PropertyName="Background">
+                            <Core:ChangePropertyAction.Value>
+                                <SolidColorBrush Color="Transparent"/>
+                            </Core:ChangePropertyAction.Value>
+                        </Core:ChangePropertyAction>
+                    </Core:EventTriggerBehavior>
+                </Interactivity:Interaction.Behaviors>
+
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock x:Name="FontZoomIconIndicator"
+                               FontFamily="Segoe MDL2 Assets" Text="&#xE8A3;"
+                               Style="{StaticResource StatusBarTextBlockStyle}"
+                               Padding="8,6,0,0"/>
+                    <TextBlock x:Name="FontZoomIndicator" Style="{StaticResource StatusBarTextBlockStyle}"
+                               Padding="2,4,8,4"
+                           IsTapEnabled="True"
+                           Tapped="StatusBarComponent_OnTapped">
+                        <TextBlock.ContextFlyout>
+                            <Flyout x:Name="FontZoomIndicatorFlyout" Placement="TopEdgeAlignedRight" Closing="StatusBarFlyout_OnClosing">
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="-10,0,-10,0">
+                                        <AppBarButton x:Name="ZoomOut" 
                                                   x:Uid="TextEditor_FontZoomIndicator_FlyoutItem_ZoomOut"
                                                   LabelPosition="Collapsed"
                                                   VerticalAlignment="Center"
@@ -523,20 +635,20 @@
                                                   Width="40"
                                                   KeyboardAcceleratorTextOverride="Ctrl+Minus" 
                                                   Click="FontZoomIndicatorFlyoutSelection_OnClick">
-                                        <AppBarButton.Icon>
-                                            <FontIcon Glyph="&#xE108;" FontFamily="Segoe MDL2 Assets"/>
-                                        </AppBarButton.Icon>
-                                        <AppBarButton.KeyboardAccelerators>
-                                            <KeyboardAccelerator Key="Subtract" Modifiers="Control" IsEnabled="False"/>
-                                        </AppBarButton.KeyboardAccelerators>
-                                    </AppBarButton>
-                                    <Slider x:Name="FontZoomSlider" 
+                                            <AppBarButton.Icon>
+                                                <FontIcon Glyph="&#xE108;" FontFamily="Segoe MDL2 Assets"/>
+                                            </AppBarButton.Icon>
+                                            <AppBarButton.KeyboardAccelerators>
+                                                <KeyboardAccelerator Key="Subtract" Modifiers="Control" IsEnabled="False"/>
+                                            </AppBarButton.KeyboardAccelerators>
+                                        </AppBarButton>
+                                        <Slider x:Name="FontZoomSlider" 
                                             Style="{StaticResource CustomSliderStyle}"
                                             Minimum="10" Maximum="500" Value="100"
                                             VerticalAlignment="Center" Width="150"
                                             Margin="5"
                                             ValueChanged="FontZoomSlider_ValueChanged"/>
-                                    <AppBarButton x:Name="ZoomIn"
+                                        <AppBarButton x:Name="ZoomIn"
                                                   x:Uid="TextEditor_FontZoomIndicator_FlyoutItem_ZoomIn"
                                                   LabelPosition="Collapsed" 
                                                   VerticalAlignment="Center"
@@ -544,43 +656,44 @@
                                                   Width="40"
                                                   KeyboardAcceleratorTextOverride="Ctrl+Plus" 
                                                   Click="FontZoomIndicatorFlyoutSelection_OnClick">
-                                        <AppBarButton.Icon>
-                                            <FontIcon Glyph="&#xE109;" FontFamily="Segoe MDL2 Assets"/>
-                                        </AppBarButton.Icon>
-                                        <AppBarButton.KeyboardAccelerators>
-                                            <KeyboardAccelerator Key="Add" Modifiers="Control" IsEnabled="False"/>
-                                        </AppBarButton.KeyboardAccelerators>
-                                    </AppBarButton>
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal" Margin="5,-5,0,0">
-                                    <TextBlock x:Name="MinZoom" Text="10%" Margin="30,0,0,0" FontSize="10"/>
-                                    <TextBlock x:Name="MaxZoom" Text="500%" Margin="108,0,0,0" FontSize="10"/>
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,-15,0,0">
-                                    <TextBlock Text="{x:Bind FontZoomSlider.Value,Mode=OneWay}" VerticalAlignment="Center" FontSize="15"/>
-                                    <TextBlock Text="%" VerticalAlignment="Center" FontSize="15"/>
-                                </StackPanel>
-                                <AppBarButton x:Name="RestoreDefaultZoom"
+                                            <AppBarButton.Icon>
+                                                <FontIcon Glyph="&#xE109;" FontFamily="Segoe MDL2 Assets"/>
+                                            </AppBarButton.Icon>
+                                            <AppBarButton.KeyboardAccelerators>
+                                                <KeyboardAccelerator Key="Add" Modifiers="Control" IsEnabled="False"/>
+                                            </AppBarButton.KeyboardAccelerators>
+                                        </AppBarButton>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="5,-5,0,0">
+                                        <TextBlock x:Name="MinZoom" Text="10%" Margin="30,0,0,0" FontSize="10"/>
+                                        <TextBlock x:Name="MaxZoom" Text="500%" Margin="108,0,0,0" FontSize="10"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,-15,0,0">
+                                        <TextBlock Text="{x:Bind FontZoomSlider.Value,Mode=OneWay}" VerticalAlignment="Center" FontSize="15"/>
+                                        <TextBlock Text="%" VerticalAlignment="Center" FontSize="15"/>
+                                    </StackPanel>
+                                    <AppBarButton x:Name="RestoreDefaultZoom"
                                               x:Uid="TextEditor_FontZoomIndicator_FlyoutItem_RestoreDefaultZoom" 
                                               Style="{StaticResource CustomAppBarButtonLabelToRightStyle}"
                                               HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="-10,5,-10,-5"
                                               Icon="Undo" 
                                               Click="FontZoomIndicatorFlyoutSelection_OnClick">
-                                    <AppBarButton.KeyboardAccelerators>
-                                        <KeyboardAccelerator Key="Number0" Modifiers="Control" IsEnabled="False"/>
-                                    </AppBarButton.KeyboardAccelerators>
-                                </AppBarButton>
-                            </StackPanel>
-                            <Flyout.FlyoutPresenterStyle>
-                                <Style TargetType="FlyoutPresenter">
-                                    <Setter Property="BorderThickness" Value="0"/>
-                                </Style>
-                            </Flyout.FlyoutPresenterStyle>
-                        </Flyout>
-                    </TextBlock.ContextFlyout>
-                </TextBlock>
+                                        <AppBarButton.KeyboardAccelerators>
+                                            <KeyboardAccelerator Key="Number0" Modifiers="Control" IsEnabled="False"/>
+                                        </AppBarButton.KeyboardAccelerators>
+                                    </AppBarButton>
+                                </StackPanel>
+                                <Flyout.FlyoutPresenterStyle>
+                                    <Style TargetType="FlyoutPresenter">
+                                        <Setter Property="BorderThickness" Value="0"/>
+                                    </Style>
+                                </Flyout.FlyoutPresenterStyle>
+                            </Flyout>
+                        </TextBlock.ContextFlyout>
+                    </TextBlock>
+                </StackPanel>
             </Grid>
-            <Grid Column="5"
+            <Grid Column="8"
                   extensions:Mouse.Cursor="Hand">
                 <Interactivity:Interaction.Behaviors>
                     <Core:EventTriggerBehavior EventName="PointerEntered">
@@ -617,7 +730,7 @@
                     </TextBlock.ContextFlyout>
                 </TextBlock>
             </Grid>
-            <Grid Column="6"
+            <Grid Column="9"
                   extensions:Mouse.Cursor="Hand">
                 <Interactivity:Interaction.Behaviors>
                     <Core:EventTriggerBehavior EventName="PointerEntered">
@@ -651,7 +764,7 @@
                     </TextBlock.ContextFlyout>
                 </TextBlock>
             </Grid>
-            <Grid Column="7"
+            <Grid Column="10"
                   extensions:Mouse.Cursor="Hand">
                 <Interactivity:Interaction.Behaviors>
                     <Core:EventTriggerBehavior EventName="PointerEntered">

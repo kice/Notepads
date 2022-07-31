@@ -693,4 +693,22 @@
     <value>Notepads暂时不支持文件后缀名 "{0}"</value>
     <comment>FileRenameError: Extension is not currently supported. {0} stands for the file extension string.</comment>
   </data>
+  <data name="App_FontIndicator_Description" xml:space="preserve">
+    <value>切换编辑器字体</value>
+  </data>
+  <data name="App_AltFont_Name" xml:space="preserve">
+    <value>备用</value>
+  </data>
+  <data name="App_ThemeModeSettings_Light" xml:space="preserve">
+    <value>浅色</value>
+  </data>
+  <data name="App_ThemeModeSettings_Dark" xml:space="preserve">
+    <value>深色</value>
+  </data>
+  <data name="App_ThemeModeSettings_PureDark" xml:space="preserve">
+    <value>纯黑</value>
+  </data>
+  <data name="App_ThemeModeSettings_System" xml:space="preserve">
+    <value>系统主题</value>
+  </data>
 </root>
